@@ -1,3 +1,6 @@
+-- This script was created evolving the Sakai database 20.2 to 21.0.
+-- If your migrating from a different version then you may need to adjust this script.
+
 -- clear unchanged bundle properties
 DELETE SAKAI_MESSAGE_BUNDLE from SAKAI_MESSAGE_BUNDLE where PROP_VALUE is NULL;
 
@@ -23,7 +26,7 @@ UPDATE lti_tools SET pl_lessonsselection = 1;
 -- SAK-44810 - Add $Resource.id.history
 -- This needs to rename a column in the DB because of a bug that keeps "settings"
 -- from working as needed for this feature.
-ALTER TABLE lti_tools RENAME COLUMN allowsettings TO allowsettings_ext;
+ALTER TABLE lti_tools CHANGE allowsettings allowsettings_ext TINYINT DEFAULT ‘0’;
 -- If autoDDL somehow already ran and created allowsettings_ext - then you need
 -- to copy data from the old column and delete it
 -- UPDATE lti_tools SET allowsettings_ext=allowsettings;
@@ -165,7 +168,6 @@ ALTER TABLE POLL_OPTION ALTER OPTION_ORDER DROP DEFAULT;
 ALTER TABLE POLL_OPTION MODIFY OPTION_POLL_ID BIGINT NOT NULL;
 ALTER TABLE POLL_OPTION ALTER OPTION_POLL_ID DROP DEFAULT;
 ALTER TABLE POLL_OPTION MODIFY OPTION_TEXT LONGTEXT NOT NULL;
-ALTER TABLE POLL_OPTION ALTER OPTION_TEXT DROP DEFAULT;
 ALTER TABLE POLL_OPTION MODIFY OPTION_UUID VARCHAR(255) NOT NULL;
 ALTER TABLE POLL_OPTION ALTER OPTION_UUID DROP DEFAULT;
 
@@ -186,7 +188,6 @@ ALTER TABLE POLL_POLL ALTER POLL_OWNER DROP DEFAULT;
 ALTER TABLE POLL_POLL MODIFY POLL_SITE_ID VARCHAR(255) NOT NULL;
 ALTER TABLE POLL_POLL ALTER POLL_SITE_ID DROP DEFAULT;
 ALTER TABLE POLL_POLL MODIFY POLL_TEXT LONGTEXT NOT NULL;
-ALTER TABLE POLL_POLL ALTER POLL_TEXT DROP DEFAULT;
 ALTER TABLE POLL_POLL MODIFY POLL_UUID VARCHAR(255) NOT NULL;
 ALTER TABLE POLL_POLL ALTER POLL_UUID DROP DEFAULT;
 ALTER TABLE POLL_POLL MODIFY POLL_VOTE_CLOSE datetime NOT NULL;
